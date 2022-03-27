@@ -1,3 +1,24 @@
 // Theme
-
 https://preview.themeforest.net/item/kalles-clean-versatile-shopify-theme/full_screen_preview/26320622?_ga=2.180457184.634713555.1648382614-1833490640.1642258327
+
+// React Bootstrap
+# Installation
+npm install react-bootstrap bootstrap@5.1.3
+
+# Importing Components
+import { Button } from 'react-bootstrap';
+
+# CSS
+{/* The following line can be included in your src/index.js or App.js file*/}
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+// Grid Card
+
+<Row xs={1} md={3} className="g-4">
+    {products.map((product) => (
+        <Product key={product.id} product={product}></Product>
+    ))}
+</Row>
+

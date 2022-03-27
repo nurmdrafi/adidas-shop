@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
 import { Container, Navbar, Nav } from "react-bootstrap";
 import { AiOutlineShopping } from "react-icons/ai";
+import './Header.css'
 
-const Header = () => {
+const Header = ({handleShow}) => {
 
   return (
-    <>
-      <Navbar bg="dark" variant="dark">
+    <div className="header">
+      <Navbar bg="dark" variant="dark" fixed="top">
         <Container>
           <Navbar.Brand href="#home">Navbar</Navbar.Brand>
           <Nav className="m-auto">
@@ -15,15 +15,16 @@ const Header = () => {
             <Nav.Link href="#products">Products</Nav.Link>
             <Nav.Link href="#about-us">About Us</Nav.Link>
           </Nav>
-          <div>
-            <AiOutlineShopping
+          <div className="cart-btn">
+            <AiOutlineShopping onClick={handleShow}
               style={{ color: "white", fontSize: "25px" }}
             ></AiOutlineShopping>
+            <span className="text-warning">0</span>
           </div>
         </Container>
         
       </Navbar>
-    </>
+    </div>
   );
 };
 
