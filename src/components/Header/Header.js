@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Navbar, Nav } from "react-bootstrap";
 import { AiOutlineShopping } from "react-icons/ai";
 
 const Header = () => {
+
   return (
     <>
       <Navbar bg="dark" variant="dark">
@@ -20,6 +21,7 @@ const Header = () => {
             ></AiOutlineShopping>
           </div>
         </Container>
+        
       </Navbar>
     </>
   );
