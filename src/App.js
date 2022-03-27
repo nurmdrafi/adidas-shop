@@ -1,24 +1,48 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/Header/Header";
-import { Container, Row, Offcanvas, OffCanvasExample } from "react-bootstrap";
+import { Container, Row, Offcanvas } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import Product from "./components/Product/Product";
+import {
+  addToLocalStorage,
+  getStoredCart,
+  deleteShoppingCart
+} from "../src/utilities/localStorageManagement.js";
 
 function App() {
   const [products, setProducts] = useState([]);
-  const [cart, setCaart] = useState([]);
+  const [cart, setCart] = useState([]);
 
-  // Cart & Local Storage Management \\
-  const addToCart = (id) => {
-    let shoppingCart = {}; // inital value
-
-    const storedCart = localStorage.getItem("shopping-cart");
-    if (storedCart) {
-      shoppingCart = JSON.parse(storedCart);
+  // Load Cart from Local Storage
+  useEffect(() => {
+    const storedCart = getStoredCart();
+    const savedCart = [];
+    for (const id in storedCart) {
+      const addedProduct = products.find((product) => product.id === id);
+      if (addedProduct) {
+        const quantity = storedCart[id];
+        addedProduct.quantity = quantity;
+        savedCart.push(addedProduct);
+      }
     }
-    let quantity = shoppingCart[id] ? shoppingCart[id] + 1 : 1;
-    localStorage.setItem("shopping-cart", JSON.stringify(shoppingCart));
+    setCart(savedCart);
+  }, [products]);
+
+  const addToCart = (selectedProduct) => {
+    let newCart = [];
+    const exist = cart.find(product => product.id === selectedProduct.id);
+    if(!exist){
+      selectedProduct.quantity = 1;
+      newCart = [...cart, selectedProduct];
+    } else{
+      const rest = cart.filter(product => product.id !== selectedProduct.id);
+      exist.quantity = exist.quantity + 1;
+      newCart = [...rest, exist];
+    }
+
+    setCart(newCart);
+    addToLocalStorage(selectedProduct.id);
   };
 
   // OffCanvas
