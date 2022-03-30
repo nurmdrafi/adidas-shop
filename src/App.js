@@ -13,8 +13,20 @@ import {
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const [cart, setCart] = useState([]);
   const [count, setCount] = useState(0);
+
+  useEffect(() =>{
+    const url = `https://api.itbook.store/1.0/search/${searchText}`
+    fetch(!searchText ? "https://api.itbook.store/1.0/new" : url)
+    .then(res => res.json())
+    .then(data => setProducts(data.books))
+  }, [searchText])
+
+  const searchBook = e =>{
+    setSearchText(e.target.value);
+  }
 
   // Load Cart from Local Storage
   useEffect(() => {
@@ -32,7 +44,7 @@ function App() {
   }, [products]);
 
   // add to cart & local storage
-  const addToCart = (selectedProduct) => {
+  const handleAddToCart = (selectedProduct) => {
     let newCart = [];
     const exist = cart.find((product) => product.id === selectedProduct.id);
     if (!exist) {
@@ -46,10 +58,10 @@ function App() {
 
     setCart(newCart);
     // cart count
-    const cartCount = cart.reduce(function(accumulator, currentValue) {
+    const cartCount = cart.reduce(function (accumulator, currentValue) {
       return accumulator + currentValue.quantity;
     }, 0);
-    setCount(cartCount)
+    setCount(cartCount);
     addToLocalStorage(selectedProduct.id);
   };
 
@@ -58,25 +70,21 @@ function App() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  useEffect(() => {
-    fetch("products.json")
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
-  }, []);
   return (
     <div className="App">
       <Header handleShow={handleShow} count={count}></Header>
       <Container className="py-5 my-5">
+        <input type="text" onChange={searchBook} />
         <Row xs={1} md={3} className="g-4">
-          {products.map((product) => (
+          {products.map((product, index) => (
             <Product
-              key={product.id}
+              key={index}
               product={product}
-              addToCart={addToCart}
-
+              handleAddToCart={handleAddToCart}
             ></Product>
           ))}
         </Row>
+        
       </Container>
 
       {/* Off Canvas */}

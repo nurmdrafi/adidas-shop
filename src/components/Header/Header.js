@@ -8,7 +8,7 @@ const Header = ({handleShow, count}) => {
     <div className="header">
       <Navbar bg="dark" variant="dark" fixed="top">
         <Container>
-          <Navbar.Brand href="#home">Adidas Store</Navbar.Brand>
+          <Navbar.Brand href="#home">Coding Book Store</Navbar.Brand>
           <Nav className="m-auto">
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#features">Features</Nav.Link>
