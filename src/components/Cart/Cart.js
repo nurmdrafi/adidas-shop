@@ -1,9 +1,10 @@
 import React from "react";
 
 const Cart = ({ cart }) => {
+  console.log(cart);
   return (
     <div>
-      <p>{cart.name}</p> <span>{cart.quantity}</span>
+      <p>{cart.title}</p> <span>{cart.quantity}</span>
     </div>
   );
 };

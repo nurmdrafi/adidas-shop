@@ -17,52 +17,55 @@ function App() {
   const [cart, setCart] = useState([]);
   const [count, setCount] = useState(0);
 
-  useEffect(() =>{
-    const url = `https://api.itbook.store/1.0/search/${searchText}`
+  useEffect(() => {
+    const url = `https://api.itbook.store/1.0/search/${searchText}`;
     fetch(!searchText ? "https://api.itbook.store/1.0/new" : url)
-    .then(res => res.json())
-    .then(data => setProducts(data.books))
-  }, [searchText])
+      .then((res) => res.json())
+      .then((data) => setProducts(data.books));
+  }, [searchText]);
 
-  const searchBook = e =>{
+  const searchBook = (e) => {
     setSearchText(e.target.value);
-  }
+  };
 
   // Load Cart from Local Storage
   useEffect(() => {
     const storedCart = getStoredCart();
     const savedCart = [];
     for (const id in storedCart) {
-      const addedProduct = products.find((product) => product.id === id);
+      const addedProduct = products.find((product) => product.isbn13 === id);
       if (addedProduct) {
         const quantity = storedCart[id];
         addedProduct.quantity = quantity;
         savedCart.push(addedProduct);
       }
     }
+    // cart count
+    const cartCount = Object.values(storedCart).reduce((a, b) => a + b, 0);
+    setCount(cartCount);
     setCart(savedCart);
-  }, [products]);
+  }, [products, cart]);
 
   // add to cart & local storage
   const handleAddToCart = (selectedProduct) => {
     let newCart = [];
-    const exist = cart.find((product) => product.id === selectedProduct.id);
+    const exist = cart.find(
+      (product) => product.isbn13 === selectedProduct.isbn13
+    );
+
     if (!exist) {
       selectedProduct.quantity = 1;
       newCart = [...cart, selectedProduct];
     } else {
-      const rest = cart.filter((product) => product.id !== selectedProduct.id);
+      const rest = cart.filter(
+        (product) => product.isbn13 !== selectedProduct.isbn13
+      );
       exist.quantity = exist.quantity + 1;
       newCart = [...rest, exist];
     }
 
     setCart(newCart);
-    // cart count
-    const cartCount = cart.reduce(function (accumulator, currentValue) {
-      return accumulator + currentValue.quantity;
-    }, 0);
-    setCount(cartCount);
-    addToLocalStorage(selectedProduct.id);
+    addToLocalStorage(selectedProduct.isbn13);
   };
 
   // OffCanvas
@@ -84,7 +87,6 @@ function App() {
             ></Product>
           ))}
         </Row>
-        
       </Container>
 
       {/* Off Canvas */}

@@ -2,6 +2,7 @@ import React from "react";
 import "./Product.css";
 
 const Product = (props) => {
+
   const { title, image, price } = props.product;
   const handleAddToCart = props.handleAddToCart;
   return (
