@@ -16,7 +16,6 @@ function App() {
   const [searchText, setSearchText] = useState("");
   const [cart, setCart] = useState([]);
   const [count, setCount] = useState(0);
-
   useEffect(() => {
     const url = `https://api.itbook.store/1.0/search/${searchText}`;
     fetch(!searchText ? "https://api.itbook.store/1.0/new" : url)
@@ -40,11 +39,19 @@ function App() {
         savedCart.push(addedProduct);
       }
     }
+    setCart(savedCart);
+  }, [products, cart]);
+
+  // cart count 
+  useEffect(() =>{
+    const storedCart = getStoredCart();
     // cart count
     const cartCount = Object.values(storedCart).reduce((a, b) => a + b, 0);
     setCount(cartCount);
-    setCart(savedCart);
-  }, [products, cart]);
+  }, [cart])
+
+
+
 
   // add to cart & local storage
   const handleAddToCart = (selectedProduct) => {
@@ -63,10 +70,13 @@ function App() {
       exist.quantity = exist.quantity + 1;
       newCart = [...rest, exist];
     }
-
     setCart(newCart);
     addToLocalStorage(selectedProduct.isbn13);
   };
+
+  const handleDeleteItem = () =>{
+
+  }
 
   // OffCanvas
   const [show, setShow] = useState(false);
@@ -97,7 +107,7 @@ function App() {
           </Offcanvas.Header>
           <Offcanvas.Body>
             {cart.map((item, index) => (
-              <Cart key={index} cart={item}></Cart>
+              <Cart key={index} cart={item} handleDeleteItem={handleDeleteItem}></Cart>
             ))}
           </Offcanvas.Body>
         </Offcanvas>

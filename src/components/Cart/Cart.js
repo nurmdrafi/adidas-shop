@@ -1,10 +1,11 @@
 import React from "react";
+import { FiDelete } from "react-icons/fi";
+import "./Cart.css"
 
-const Cart = ({ cart }) => {
-  console.log(cart);
+const Cart = ({ cart, handleDeleteItem }) => {
   return (
-    <div>
-      <p>{cart.title}</p> <span>{cart.quantity}</span>
+    <div className="cart">
+      <small>{cart.title} x {cart.quantity}</small> <button onClick={handleDeleteItem}><FiDelete></FiDelete></button>
     </div>
   );
 };

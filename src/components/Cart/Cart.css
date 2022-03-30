@@ -1,0 +1,16 @@
+.cart {
+  display: flex;
+  height: 50px;
+  align-items: center;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background: #ffffff;
+  box-shadow: 25px 25px 50px #e8e8e8, -25px -25px 50px #ffffff;
+}
+.cart button {
+  border: none;
+  background-color: transparent;
+  margin-left: auto;
+  font-size: 25px;
+  color: orangered;
+}
