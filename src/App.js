@@ -17,41 +17,48 @@ function App() {
   const [cart, setCart] = useState([]);
   const [count, setCount] = useState(0);
   useEffect(() => {
+    // const storedCart = getStoredCart();
     const url = `https://api.itbook.store/1.0/search/${searchText}`;
     fetch(!searchText ? "https://api.itbook.store/1.0/new" : url)
       .then((res) => res.json())
-      .then((data) => setProducts(data.books));
+      .then((data) => {
+        const newProducts = [...products, ...data.books];
+        // console.log(data.books)
+        setProducts(newProducts);
+      });
   }, [searchText]);
 
   const searchBook = (e) => {
     setSearchText(e.target.value);
   };
-
+  console.log(cart)
   // Load Cart from Local Storage
   useEffect(() => {
     const storedCart = getStoredCart();
     const savedCart = [];
+    console.log(storedCart)
     for (const id in storedCart) {
+      console.log(id)
       const addedProduct = products.find((product) => product.isbn13 === id);
       if (addedProduct) {
         const quantity = storedCart[id];
+        // console.log('addedProduct', addedProduct)
+        // product list is not fixed because of fetching
         addedProduct.quantity = quantity;
         savedCart.push(addedProduct);
+      } else{
+        console.log("Not Matched")
       }
     }
     setCart(savedCart);
-  }, [products, cart]);
+  }, [products]);
 
-  // cart count 
-  useEffect(() =>{
+  // cart count
+  useEffect(() => {
     const storedCart = getStoredCart();
-    // cart count
     const cartCount = Object.values(storedCart).reduce((a, b) => a + b, 0);
     setCount(cartCount);
-  }, [cart])
-
-
-
+  }, [cart]);
 
   // add to cart & local storage
   const handleAddToCart = (selectedProduct) => {
@@ -74,9 +81,7 @@ function App() {
     addToLocalStorage(selectedProduct.isbn13);
   };
 
-  const handleDeleteItem = () =>{
-
-  }
+  const handleDeleteItem = () => {};
 
   // OffCanvas
   const [show, setShow] = useState(false);
@@ -87,7 +92,7 @@ function App() {
     <div className="App">
       <Header handleShow={handleShow} count={count}></Header>
       <Container className="py-5 my-5">
-        <input type="text" onChange={searchBook} />
+        <input type="text" onChange={(e) => searchBook(e)} />
         <Row xs={1} md={3} className="g-4">
           {products.map((product, index) => (
             <Product
@@ -107,7 +112,11 @@ function App() {
           </Offcanvas.Header>
           <Offcanvas.Body>
             {cart.map((item, index) => (
-              <Cart key={index} cart={item} handleDeleteItem={handleDeleteItem}></Cart>
+              <Cart
+                key={index}
+                cart={item}
+                handleDeleteItem={handleDeleteItem}
+              ></Cart>
             ))}
           </Offcanvas.Body>
         </Offcanvas>
