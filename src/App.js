@@ -17,37 +17,26 @@ function App() {
   const [cart, setCart] = useState([]);
   const [count, setCount] = useState(0);
   useEffect(() => {
-    // const storedCart = getStoredCart();
     const url = `https://api.itbook.store/1.0/search/${searchText}`;
     fetch(!searchText ? "https://api.itbook.store/1.0/new" : url)
       .then((res) => res.json())
-      .then((data) => {
-        const newProducts = [...products, ...data.books];
-        // console.log(data.books)
-        setProducts(newProducts);
-      });
+      .then((data) => setProducts(data.books));
   }, [searchText]);
-
   const searchBook = (e) => {
     setSearchText(e.target.value);
   };
-  console.log(cart)
   // Load Cart from Local Storage
   useEffect(() => {
     const storedCart = getStoredCart();
     const savedCart = [];
-    console.log(storedCart)
     for (const id in storedCart) {
-      console.log(id)
       const addedProduct = products.find((product) => product.isbn13 === id);
       if (addedProduct) {
         const quantity = storedCart[id];
-        // console.log('addedProduct', addedProduct)
-        // product list is not fixed because of fetching
         addedProduct.quantity = quantity;
         savedCart.push(addedProduct);
-      } else{
-        console.log("Not Matched")
+      } else {
+        console.log("Not Matched");
       }
     }
     setCart(savedCart);
@@ -81,7 +70,10 @@ function App() {
     addToLocalStorage(selectedProduct.isbn13);
   };
 
-  const handleDeleteItem = () => {};
+  const handleDeleteItem = (selectedProduct) => {
+    const rest = cart.filter(product => product.isbn13 !== selectedProduct.isbn13);
+    setCart(rest);
+  };
 
   // OffCanvas
   const [show, setShow] = useState(false);
